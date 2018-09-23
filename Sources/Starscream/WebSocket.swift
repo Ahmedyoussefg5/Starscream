@@ -150,7 +150,7 @@ open class FoundationStream : NSObject, WSStream, StreamDelegate  {
         inputStream = readStream!.takeRetainedValue()
         outputStream = writeStream!.takeRetainedValue()
 
-        #if os(watchOS) //watchOS us unfortunately is missing the kCFStream properties to make this work
+        #if os(watchOS) || os(Linux)  //watchOS us unfortunately is missing the kCFStream properties to make this work
         #else
             if enableSOCKSProxy {
                 let proxyDict = CFNetworkCopySystemProxySettings()
@@ -167,7 +167,7 @@ open class FoundationStream : NSObject, WSStream, StreamDelegate  {
         if ssl.useSSL {
             inStream.setProperty(StreamSocketSecurityLevel.negotiatedSSL as AnyObject, forKey: Stream.PropertyKey.socketSecurityLevelKey)
             outStream.setProperty(StreamSocketSecurityLevel.negotiatedSSL as AnyObject, forKey: Stream.PropertyKey.socketSecurityLevelKey)
-            #if os(watchOS) //watchOS us unfortunately is missing the kCFStream properties to make this work
+            #if os(watchOS) || os(Linux) //watchOS us unfortunately is missing the kCFStream properties to make this work
             #else
                 var settings = [NSObject: NSObject]()
                 if ssl.disableCertValidation {
