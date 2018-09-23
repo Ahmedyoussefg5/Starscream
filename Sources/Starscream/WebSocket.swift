@@ -1317,6 +1317,10 @@ open class WebSocket : NSObject, StreamDelegate, WebSocketClient, WSStreamDelega
         writeQueue.cancelAllOperations()
     }
 
+    #if os(Linux)
+    open func stream(_ aStream: Stream, handle eventCode: Stream.Event) { }
+    #endif
+
 }
 
 private extension String {
