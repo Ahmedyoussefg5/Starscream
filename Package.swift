@@ -29,9 +29,9 @@ let package = Package(
         ],
         dependencies: [
                 .package(url: "https://github.com/daltoniam/zlib-spm.git", from: "1.1.0"),
-                .package(url: "https://github.com/daltoniam/common-crypto-spm", from: "1.1.0")
+                .package(url: "https://github.com/krzyzanowskim/CryptoSwift.git", .upToNextMinor(from: "0.12.0"))
         ],
         targets: [
-                .target(name: "Starscream")
+                .target(name: "Starscream", dependencies: ["CryptoSwift"])
         ]
 )

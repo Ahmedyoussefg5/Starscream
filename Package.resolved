@@ -2,12 +2,12 @@
   "object": {
     "pins": [
       {
-        "package": "SSCommonCrypto",
-        "repositoryURL": "https://github.com/daltoniam/common-crypto-spm",
+        "package": "CryptoSwift",
+        "repositoryURL": "https://github.com/krzyzanowskim/CryptoSwift.git",
         "state": {
           "branch": null,
-          "revision": "2eb3aff0fb57f92f5722fac5d6d20bf64669ca66",
-          "version": "1.1.0"
+          "revision": "2bcb008fe23d286e5da79311051e19b3345f1cd5",
+          "version": "0.12.0"
         }
       },
       {
