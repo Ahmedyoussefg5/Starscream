@@ -143,12 +143,8 @@ open class FoundationStream : NSObject, WSStream, StreamDelegate  {
 	public var enableSOCKSProxy = false
     
     public func connect(url: URL, port: Int, timeout: TimeInterval, ssl: SSLSettings, completion: @escaping ((Error?) -> Void)) {
-        var readStream: Unmanaged<CFReadStream>?
-        var writeStream: Unmanaged<CFWriteStream>?
-        let h = url.host! as NSString
-        CFStreamCreatePairWithSocketToHost(nil, h, UInt32(port), &readStream, &writeStream)
-        inputStream = readStream!.takeRetainedValue()
-        outputStream = writeStream!.takeRetainedValue()
+        inputStream = InputStream(url: url)
+        outputStream = OutputStream(url: url, append: false)
 
         #if os(watchOS) //watchOS us unfortunately is missing the kCFStream properties to make this work
         #else
