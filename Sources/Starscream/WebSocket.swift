@@ -440,7 +440,7 @@ open class WebSocket : NSObject, StreamDelegate, WebSocketClient, WSStreamDelega
         var compressor:Compressor? = nil
     }
     
-    private var stream: WSStream
+    private var wsStream: WSStream
     private var connected = false
     private var isConnecting = false
     private let mutex = NSLock()
@@ -463,7 +463,7 @@ open class WebSocket : NSObject, StreamDelegate, WebSocketClient, WSStreamDelega
     /// Used for setting protocols.
     public init(request: URLRequest, protocols: [String]? = nil, stream: WSStream = FoundationStream()) {
         self.request = request
-        self.stream = stream
+        self.wsStream = stream
         if request.value(forHTTPHeaderField: headerOriginName) == nil {
             guard let url = request.url else {return}
             var origin = url.absoluteString
@@ -666,8 +666,8 @@ open class WebSocket : NSObject, StreamDelegate, WebSocketClient, WSStreamDelega
         #endif
         certValidated = !useSSL
         let timeout = request.timeoutInterval * 1_000_000
-        stream.delegate = self
-        stream.connect(url: url, port: port, timeout: timeout, ssl: settings, completion: { [weak self] (error) in
+        wsStream.delegate = self
+        wsStream.connect(url: url, port: port, timeout: timeout, ssl: settings, completion: { [weak self] (error) in
             guard let s = self else {return}
             if error != nil {
                 s.disconnectStream(error)
@@ -682,7 +682,7 @@ open class WebSocket : NSObject, StreamDelegate, WebSocketClient, WSStreamDelega
                     s.certValidated = false
                 #else
                     if let sec = s.security, !s.certValidated {
-                        let trustObj = s.stream.sslTrust()
+                        let trustObj = s.wsStream.sslTrust()
                         if let possibleTrust = trustObj.trust {
                             s.certValidated = sec.isValid(possibleTrust, domain: trustObj.domain)
                         } else {
@@ -694,7 +694,7 @@ open class WebSocket : NSObject, StreamDelegate, WebSocketClient, WSStreamDelega
                         }
                     }
                 #endif
-                let _ = s.stream.write(data: data)
+                let _ = s.wsStream.write(data: data)
             }
             s.writeQueue.addOperation(operation)
         })
@@ -739,7 +739,7 @@ open class WebSocket : NSObject, StreamDelegate, WebSocketClient, WSStreamDelega
      cleanup the streams.
      */
     private func cleanupStream() {
-        stream.cleanup()
+        wsStream.cleanup()
         fragBuffer = nil
     }
 
@@ -747,7 +747,7 @@ open class WebSocket : NSObject, StreamDelegate, WebSocketClient, WSStreamDelega
      Handles the incoming bytes and sending them to the proper processing method.
      */
     private func processInputStream() {
-        let data = stream.read()
+        let data = wsStream.read()
         guard let d = data else { return }
         var process = false
         if inputQueue.count == 0 {
@@ -1259,7 +1259,7 @@ open class WebSocket : NSObject, StreamDelegate, WebSocketClient, WSStreamDelega
                     s.doDisconnect(WSError(type: .outputStreamWriteError, message: "output stream had an error during write", code: 0))
                     break
                 }
-                let stream = s.stream
+                let stream = s.wsStream
                 let writeBuffer = UnsafeRawPointer(frame!.bytes+total).assumingMemoryBound(to: UInt8.self)
                 let len = stream.write(data: Data(bytes: writeBuffer, count: offset-total))
                 if len <= 0 {
