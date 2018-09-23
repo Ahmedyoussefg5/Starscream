@@ -63,11 +63,11 @@ public protocol WebSocketClient: class {
     var disableSSLCertValidation: Bool {get set}
     var overrideTrustHostname: Bool {get set}
     var desiredTrustHostname: String? {get set}
-    var sslClientCertificate: SSLClientCertificate? {get set}
     #if os(Linux)
     #else
-    var security: SSLTrustValidator? {get set}
     var enabledSSLCipherSuites: [SSLCipherSuite]? {get set}
+    var security: SSLTrustValidator? {get set}
+    var sslClientCertificate: SSLClientCertificate? {get set}
     #endif
     var isConnected: Bool {get}
     
@@ -407,12 +407,12 @@ open class WebSocket : NSObject, StreamDelegate, WebSocketClient, WSStreamDelega
     public var disableSSLCertValidation = false
     public var overrideTrustHostname = false
     public var desiredTrustHostname: String? = nil
-    public var sslClientCertificate: SSLClientCertificate? = nil
 
     public var enableCompression = true
     #if os(Linux)
     #else
     public var security: SSLTrustValidator?
+    public var sslClientCertificate: SSLClientCertificate? = nil
     public var enabledSSLCipherSuites: [SSLCipherSuite]?
     #endif
     
