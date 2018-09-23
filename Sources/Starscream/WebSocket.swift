@@ -108,9 +108,9 @@ public struct SSLSettings {
     public let disableCertValidation: Bool
     public var overrideTrustHostname: Bool
     public var desiredTrustHostname: String?
-    public let sslClientCertificate: SSLClientCertificate?
     #if os(Linux)
     #else
+    public let sslClientCertificate: SSLClientCertificate?
     public let cipherSuites: [SSLCipherSuite]?
     #endif
 }
@@ -655,8 +655,7 @@ open class WebSocket : NSObject, StreamDelegate, WebSocketClient, WSStreamDelega
             let settings = SSLSettings(useSSL: useSSL,
                                        disableCertValidation: disableSSLCertValidation,
                                        overrideTrustHostname: overrideTrustHostname,
-                                       desiredTrustHostname: desiredTrustHostname),
-                                       sslClientCertificate: sslClientCertificate
+                                       desiredTrustHostname: desiredTrustHostname)
         #else
             let settings = SSLSettings(useSSL: useSSL,
                                        disableCertValidation: disableSSLCertValidation,

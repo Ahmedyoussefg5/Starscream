@@ -8,6 +8,9 @@
 
 import Foundation
 
+#if os(Linux)
+#else
+
 public struct SSLClientCertificateError: LocalizedError {
     public var errorDescription: String?
     
@@ -89,4 +92,4 @@ public class SSLClientCertificate {
         }
     }
 }
-
+#endif
